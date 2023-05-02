@@ -11,22 +11,8 @@ import { setItem } from './setItem';
 import { changeItem } from './changeItem';
 import { deleteItem } from './deleteItem';
 import { wrongRoute } from './wrongRoute';
-
-enum Methods {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  DELETE = 'DELETE'
-
-}
-export interface IUser {
-  id: string;
-  username: string;
-  age: number;
-  hobbies: string[]
-}
-
-export type DBtype = IUser[];
+import { Methods } from './types/Methods';
+import { DBtype, IUser } from './types/IUser';
 
 let DB: DBtype = [
   { 
