@@ -2,6 +2,7 @@ import { ServerResponse } from 'http';
 import { wrongRoute } from './wrongRoute';
 import { DBtype } from '../types/IUser';
 import { StatusCodes } from '../types/StatusCodes';
+import { ErrorMessage } from '../types/ErrorMessage';
 
 export const getUsers = (
   url: string,
@@ -18,7 +19,7 @@ export const getUsers = (
       response.writeHead(StatusCodes.InternalServerError, {
         'Content-Type': 'application/json',
       });
-      response.end(JSON.stringify({ message: 'Server Error' }));
+      response.end(JSON.stringify({ message: ErrorMessage.ServerError }));
     }
   } else if (url?.startsWith('/api/users/')) {
     const id = url.split('/')[3];
@@ -27,12 +28,12 @@ export const getUsers = (
       response.writeHead(StatusCodes.BadRequest, {
         'Content-Type': 'application/json',
       });
-      response.end(JSON.stringify({ message: 'Bad Reguest' }));
+      response.end(JSON.stringify({ message: ErrorMessage.BadRequest }));
     } else if (!user) {
       response.writeHead(StatusCodes.NotFound, {
         'Content-Type': 'application/json',
       });
-      response.end(JSON.stringify({ message: 'Item not found' }));
+      response.end(JSON.stringify({ message:ErrorMessage.NotFound }));
     } else {
       response.writeHead(StatusCodes.OK, {
         'Content-Type': 'application/json',

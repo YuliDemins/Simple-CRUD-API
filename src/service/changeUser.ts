@@ -2,6 +2,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import { DBtype, IUser } from '../types/IUser';
 import { StatusCodes } from '../types/StatusCodes';
 import { wrongRoute } from './wrongRoute';
+import { ErrorMessage } from '../types/ErrorMessage';
 
 export const changeUser = (
   url: string,
@@ -15,7 +16,7 @@ export const changeUser = (
       response.writeHead(StatusCodes.BadRequest, {
         'Content-Type': 'application/json',
       });
-      response.end(JSON.stringify({ message: 'Bad Reguest' }));
+      response.end(JSON.stringify({ message: ErrorMessage.BadRequest }));
     } else {
       try {
         let body: string = '';
@@ -27,7 +28,7 @@ export const changeUser = (
           response.writeHead(StatusCodes.NotFound, {
             'Content-Type': 'application/json',
           });
-          response.end(JSON.stringify({ message: 'Item not found' }));
+          response.end(JSON.stringify({ message:ErrorMessage.NotFound }));
         } else {
           request.on('end', () => {
             if (
@@ -38,7 +39,7 @@ export const changeUser = (
               response.writeHead(StatusCodes.BadRequest, {
                 'Content-Type': 'application/json',
               });
-              response.end(JSON.stringify({ message: 'Bad Reguest' }));
+              response.end(JSON.stringify({ message: ErrorMessage.BadRequest }));
             } else {
               const { username, age, hobbies } = JSON.parse(body);
 
@@ -62,7 +63,7 @@ export const changeUser = (
         response.writeHead(StatusCodes.InternalServerError, {
           'Content-Type': 'application/json',
         });
-        response.end(JSON.stringify({ message: 'Server Error' }));
+        response.end(JSON.stringify({ message: ErrorMessage.ServerError }));
       }
     }
   } else {

@@ -6,7 +6,8 @@
   "scripts": {
     "start:dev": "nodemon",
     "start:prod": "tsc && node dist/server.js",
-    "start:multi": "nodemon -- --multi"
+    "start:multi": "nodemon -- --multi",
+    "test": "test"
   },
   "repository": {
     "type": "git",

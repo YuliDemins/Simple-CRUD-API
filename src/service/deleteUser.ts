@@ -2,6 +2,7 @@ import { ServerResponse } from 'http';
 import { DBtype } from '../types/IUser';
 import { StatusCodes } from '../types/StatusCodes';
 import { wrongRoute } from './wrongRoute';
+import { ErrorMessage } from '../types/ErrorMessage';
 
 export const deleteUser = (
   url: string,
@@ -16,7 +17,7 @@ export const deleteUser = (
         response.writeHead(StatusCodes.NotFound, {
           'Content-Type': 'application/json',
         });
-        response.end(JSON.stringify({ message: 'Item not found' }));
+        response.end(JSON.stringify({ message: ErrorMessage.NotFound }));
       } else {
         const deleteUser = arr.splice(parseInt(id) - 1, 1);
         response.writeHead(StatusCodes.NoContent, {
@@ -29,7 +30,7 @@ export const deleteUser = (
       response.writeHead(StatusCodes.InternalServerError, {
         'Content-Type': 'application/json',
       });
-      response.end(JSON.stringify({ message: 'Server Error' }));
+      response.end(JSON.stringify({ message: ErrorMessage.ServerError }));
     }
   } else {
     wrongRoute(response);

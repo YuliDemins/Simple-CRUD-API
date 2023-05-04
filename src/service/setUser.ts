@@ -1,35 +1,31 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { v4 as uuidv4 } from 'uuid';
-import { wrongRoute } from './wrongRoute';
 import { DBtype, IUser } from '../types/IUser';
 import { StatusCodes } from '../types/StatusCodes';
+import { checkJSON } from './checkJSON';
+import { ErrorMessage } from '../types/ErrorMessage';
 
-export const setUser = (
+export const setUser = async (
   url: string,
   request: IncomingMessage,
   response: ServerResponse,
   arr: DBtype
-): void => {
+): Promise<void> => {
   if (url === '/api/users') {
     try {
-      let body: string = '';
-      request.on('data', (chunk) => {
-        body += chunk.toString();
-      });
-
-      request.on('end', () => {
-        console.log(JSON.parse(body).hasOwnProperty('username'));
+      let data:IUser = await checkJSON(request)
         if (
-          !JSON.parse(body).hasOwnProperty('username') ||
-          !JSON.parse(body).hasOwnProperty('age') ||
-          !JSON.parse(body).hasOwnProperty('hobbies')
+          !data.hasOwnProperty('username') ||
+          !data.hasOwnProperty('age') ||
+          !data.hasOwnProperty('hobbies') ||
+          !Array.isArray(data.hobbies)
         ) {
           response.writeHead(StatusCodes.BadRequest, {
             'Content-Type': 'application/json',
           });
-          response.end(JSON.stringify({ message: 'Bad Reguest' }));
+          response.end(JSON.stringify({ message: ErrorMessage.BadRequest }));
         } else {
-          const { username, age, hobbies } = JSON.parse(body);
+          const { username, age, hobbies } = data;
           const getUser: IUser = {
             id: uuidv4(),
             username,
@@ -41,15 +37,13 @@ export const setUser = (
             'Content-Type': 'application/json',
           });
           arr.push(getUser);
-          return response.end(JSON.stringify(getUser));
+          response.end(JSON.stringify(getUser));
         }
-      });
     } catch (err) {
-      console.log(err);
+
       response.writeHead(StatusCodes.InternalServerError, {
         'Content-Type': 'application/json',
       });
-      response.end(JSON.stringify({ message: 'Server Error' }));
+      response.end(JSON.stringify({ message:ErrorMessage.ServerError }));
     }
-  } else wrongRoute(response);
-};
+}};
