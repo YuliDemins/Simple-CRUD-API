@@ -1,15 +1,15 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { DBtype, IUser } from '../types/IUser';
 import { StatusCodes } from '../types/StatusCodes';
-import { wrongRoute } from './wrongRoute';
 import { ErrorMessage } from '../types/ErrorMessage';
+import { checkJSON } from './checkJSON';
 
-export const changeUser = (
+export const changeUser = async (
   url: string,
   request: IncomingMessage,
   response: ServerResponse,
   arr: DBtype
-): void => {
+): Promise<void> => {
   if (url?.startsWith('/api/users/')) {
     const id = url.split('/')[3];
     if (!id) {
@@ -19,29 +19,19 @@ export const changeUser = (
       response.end(JSON.stringify({ message: ErrorMessage.BadRequest }));
     } else {
       try {
-        let body: string = '';
-        request.on('data', (chunk) => {
-          body += chunk.toString();
-        });
-        const user = arr.find((i) => i.id === id);
-        if (!user) {
-          response.writeHead(StatusCodes.NotFound, {
-            'Content-Type': 'application/json',
-          });
-          response.end(JSON.stringify({ message:ErrorMessage.NotFound }));
-        } else {
-          request.on('end', () => {
+        let data:IUser = await checkJSON(request)
             if (
-              !JSON.parse(body).hasOwnProperty('username') ||
-              !JSON.parse(body).hasOwnProperty('age') ||
-              !JSON.parse(body).hasOwnProperty('hobbies')
+              !data.hasOwnProperty('username') ||
+              !data.hasOwnProperty('age') ||
+              !data.hasOwnProperty('hobbies') ||
+              !Array.isArray(data.hobbies)
             ) {
               response.writeHead(StatusCodes.BadRequest, {
                 'Content-Type': 'application/json',
               });
               response.end(JSON.stringify({ message: ErrorMessage.BadRequest }));
             } else {
-              const { username, age, hobbies } = JSON.parse(body);
+              const { username, age, hobbies } = data;
 
               const correctUser: IUser = {
                 id,
@@ -54,10 +44,8 @@ export const changeUser = (
               response.writeHead(StatusCodes.OK, {
                 'Content-Type': 'application/json',
               });
-              return response.end(JSON.stringify(correctUser));
+              response.end(JSON.stringify(correctUser));
             }
-          });
-        }
       } catch (err) {
         console.log(err);
         response.writeHead(StatusCodes.InternalServerError, {
@@ -66,7 +54,5 @@ export const changeUser = (
         response.end(JSON.stringify({ message: ErrorMessage.ServerError }));
       }
     }
-  } else {
-    wrongRoute(response);
   }
 };
