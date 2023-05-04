@@ -4,7 +4,7 @@
 
 1. Clone this repository `git clone ...link...`
 
-2. Switch branch to develop `git branch develop`
+2. Switch branch to develop `git checkout develop`
 
 3. Use `npm install`
 
