@@ -3,13 +3,13 @@ import { DBtype, IUser } from '../types/IUser';
 import { StatusCodes } from '../types/StatusCodes';
 import { wrongRoute } from './wrongRoute';
 
-export const changeItem = (
+export const changeUser = (
   url: string,
   request: IncomingMessage,
   response: ServerResponse,
   arr: DBtype
 ): void => {
-  if (url?.startsWith('/api/items/')) {
+  if (url?.startsWith('/api/users/')) {
     const id = url.split('/')[3];
     if (!id) {
       response.writeHead(StatusCodes.BadRequest, {
@@ -22,8 +22,8 @@ export const changeItem = (
         request.on('data', (chunk) => {
           body += chunk.toString();
         });
-        const item = arr.find((i) => i.id === id);
-        if (!item) {
+        const user = arr.find((i) => i.id === id);
+        if (!user) {
           response.writeHead(StatusCodes.NotFound, {
             'Content-Type': 'application/json',
           });
@@ -42,18 +42,18 @@ export const changeItem = (
             } else {
               const { username, age, hobbies } = JSON.parse(body);
 
-              const correctItem: IUser = {
+              const correctUser: IUser = {
                 id,
                 username,
                 age,
                 hobbies,
               };
 
-              arr[parseInt(id) - 1] = { ...correctItem };
+              arr[parseInt(id) - 1] = { ...correctUser };
               response.writeHead(StatusCodes.OK, {
                 'Content-Type': 'application/json',
               });
-              return response.end(JSON.stringify(correctItem));
+              return response.end(JSON.stringify(correctUser));
             }
           });
         }

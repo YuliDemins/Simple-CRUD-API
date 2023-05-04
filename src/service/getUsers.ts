@@ -3,12 +3,12 @@ import { wrongRoute } from './wrongRoute';
 import { DBtype } from '../types/IUser';
 import { StatusCodes } from '../types/StatusCodes';
 
-export const getItems = (
+export const getUsers = (
   url: string,
   response: ServerResponse,
   arr: DBtype
 ): void => {
-  if (url === '/api/items') {
+  if (url === '/api/users') {
     try {
       response.writeHead(StatusCodes.OK, {
         'Content-Type': 'application/json',
@@ -20,15 +20,15 @@ export const getItems = (
       });
       response.end(JSON.stringify({ message: 'Server Error' }));
     }
-  } else if (url?.startsWith('/api/items/')) {
+  } else if (url?.startsWith('/api/users/')) {
     const id = url.split('/')[3];
-    const item = arr.find((i) => i.id === id);
+    const user = arr.find((i) => i.id === id);
     if (!id) {
       response.writeHead(StatusCodes.BadRequest, {
         'Content-Type': 'application/json',
       });
       response.end(JSON.stringify({ message: 'Bad Reguest' }));
-    } else if (!item) {
+    } else if (!user) {
       response.writeHead(StatusCodes.NotFound, {
         'Content-Type': 'application/json',
       });
@@ -37,7 +37,7 @@ export const getItems = (
       response.writeHead(StatusCodes.OK, {
         'Content-Type': 'application/json',
       });
-      response.end(JSON.stringify(item));
+      response.end(JSON.stringify(user));
     }
   } else wrongRoute(response);
 };

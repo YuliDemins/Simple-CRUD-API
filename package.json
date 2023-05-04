@@ -2,12 +2,10 @@
   "name": "simple-crud-api",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "server.ts",
   "scripts": {
-    "start": "ts-node src/server.ts",
-    "dev": "nodemon",
-    "prod": "node dist/server.js",
-    "build": "tsc"
+    "start:dev": "nodemon",
+    "start:prod": "tsc && node dist/server.js"
   },
   "repository": {
     "type": "git",

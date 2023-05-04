@@ -3,26 +3,26 @@ import { DBtype } from '../types/IUser';
 import { StatusCodes } from '../types/StatusCodes';
 import { wrongRoute } from './wrongRoute';
 
-export const deleteItem = (
+export const deleteUser = (
   url: string,
   response: ServerResponse,
   arr: DBtype
 ) => {
-  if (url?.startsWith('/api/items/')) {
+  if (url?.startsWith('/api/users/')) {
     const id = url.split('/')[3];
     try {
-      const item = arr.find((i) => i.id === id);
-      if (!item) {
+      const user = arr.find((i) => i.id === id);
+      if (!user) {
         response.writeHead(StatusCodes.NotFound, {
           'Content-Type': 'application/json',
         });
         response.end(JSON.stringify({ message: 'Item not found' }));
       } else {
-        const deleteItem = arr.splice(parseInt(id) - 1, 1);
+        const deleteUser = arr.splice(parseInt(id) - 1, 1);
         response.writeHead(StatusCodes.NoContent, {
           'Content-Type': 'application/json',
         });
-        return response.end(JSON.stringify(deleteItem));
+        return response.end(JSON.stringify(deleteUser));
       }
     } catch (err) {
       console.log(err);

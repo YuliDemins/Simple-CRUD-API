@@ -4,13 +4,13 @@ import { wrongRoute } from './wrongRoute';
 import { DBtype, IUser } from '../types/IUser';
 import { StatusCodes } from '../types/StatusCodes';
 
-export const setItem = (
+export const setUser = (
   url: string,
   request: IncomingMessage,
   response: ServerResponse,
   arr: DBtype
 ): void => {
-  if (url === '/api/items') {
+  if (url === '/api/users') {
     try {
       let body: string = '';
       request.on('data', (chunk) => {
@@ -30,7 +30,7 @@ export const setItem = (
           response.end(JSON.stringify({ message: 'Bad Reguest' }));
         } else {
           const { username, age, hobbies } = JSON.parse(body);
-          const getItem: IUser = {
+          const getUser: IUser = {
             id: uuidv4(),
             username,
             age,
@@ -40,8 +40,8 @@ export const setItem = (
           response.writeHead(StatusCodes.Created, {
             'Content-Type': 'application/json',
           });
-          arr.push(getItem);
-          return response.end(JSON.stringify(getItem));
+          arr.push(getUser);
+          return response.end(JSON.stringify(getUser));
         }
       });
     } catch (err) {
