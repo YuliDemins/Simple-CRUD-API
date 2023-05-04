@@ -12,9 +12,9 @@
 
    dev mode `npm run start:dev` 
 
-   production mode `start:prod`
+   production mode `npm run start:prod`
 
-   multi cluster mode `start:multi`
+   multi cluster mode `npm run start:multi`
 
 Use Postman to send request to the server.
 
