@@ -16,6 +16,8 @@
 
   `npm run start:multi` multi cluster mode
 
+  `npm run test` run tests
+
 Use Postman to send request to the server.
 
 :fire: API
