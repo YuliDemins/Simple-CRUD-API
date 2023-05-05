@@ -3,6 +3,7 @@ import { DBtype } from '../types/IUser';
 import { StatusCodes } from '../types/StatusCodes';
 import { wrongRoute } from './wrongRoute';
 import { ErrorMessage } from '../types/ErrorMessage';
+import { validate } from 'uuid';
 
 export const deleteUser = (
   url: string,
@@ -13,7 +14,19 @@ export const deleteUser = (
     const id = url.split('/')[3];
     try {
       const user = arr.find((i) => i.id === id);
-      if (!user) {
+      if (!id) {
+        response.writeHead(StatusCodes.NotFound, {
+          'Content-Type': 'application/json',
+        });
+        response.end(JSON.stringify({ message: ErrorMessage.NotFound }));
+      }
+        else if (!validate(id)) {
+          response.writeHead(StatusCodes.BadRequest, {
+            'Content-Type': 'application/json',
+          });
+          response.end(JSON.stringify({ message: ErrorMessage.InvalidId }));
+        }
+      else if (!user) {
         response.writeHead(StatusCodes.NotFound, {
           'Content-Type': 'application/json',
         });

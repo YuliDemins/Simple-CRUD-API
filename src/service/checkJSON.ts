@@ -1,18 +1,14 @@
-import { IncomingMessage } from "http";
+import { IncomingMessage, ServerResponse } from "http";
 
-export const checkJSON = <IUser>(request: IncomingMessage): Promise<IUser> => {
-  return new Promise((resolve, reject) => {
-    const chunks: Buffer[] = [];
-    request.on('data', (chunk) => {
-      chunks.push(chunk);
-    });
-    request.on('end', () => {
-      try {
-        const data = JSON.parse(chunks.toString());
-        resolve(data);
-      } catch (err) {
-        reject();
-      }
-    });
-  });
+export const checkJSON = async (request: IncomingMessage, response:ServerResponse) => {
+  const chunks: Buffer[] = [];
+  for await (const chunk of request) {
+    chunks.push(chunk);
+  }
+  try {
+    const data = JSON.parse(Buffer.concat(chunks).toString());
+    return data;
+  } catch (err) {
+    console.log(err)
+  }
 }

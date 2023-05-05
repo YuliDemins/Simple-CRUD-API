@@ -1,4 +1,4 @@
-export enum Methods {
+export const enum Methods {
   GET = 'GET',
   POST = 'POST',
   PUT = 'PUT',

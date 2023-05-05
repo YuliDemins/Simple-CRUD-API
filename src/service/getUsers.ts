@@ -3,6 +3,7 @@ import { wrongRoute } from './wrongRoute';
 import { DBtype } from '../types/IUser';
 import { StatusCodes } from '../types/StatusCodes';
 import { ErrorMessage } from '../types/ErrorMessage';
+import { validate } from 'uuid';
 
 export const getUsers = (
   url: string,
@@ -25,10 +26,16 @@ export const getUsers = (
     const id = url.split('/')[3];
     const user = arr.find((i) => i.id === id);
     if (!id) {
-      response.writeHead(StatusCodes.BadRequest, {
+      response.writeHead(StatusCodes.NotFound, {
         'Content-Type': 'application/json',
       });
-      response.end(JSON.stringify({ message: ErrorMessage.BadRequest }));
+      response.end(JSON.stringify({ message: ErrorMessage.NotFound }));
+    }
+      else if (!validate(id)) {
+        response.writeHead(StatusCodes.BadRequest, {
+          'Content-Type': 'application/json',
+        });
+        response.end(JSON.stringify({ message: ErrorMessage.InvalidId }));
     } else if (!user) {
       response.writeHead(StatusCodes.NotFound, {
         'Content-Type': 'application/json',

@@ -1,4 +1,4 @@
-export enum StatusCodes {
+export const enum StatusCodes {
   OK = 200,
   Created = 201,
   NoContent = 204,
