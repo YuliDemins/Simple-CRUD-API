@@ -20,8 +20,9 @@ export const server = createServer((request: IncomingMessage, response: ServerRe
 const startServer = (): void => {
   server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
-  });
+});
 }
+
 
 const startWorkers = (): void => {
   if (cluster.isPrimary) {
@@ -29,10 +30,16 @@ const startWorkers = (): void => {
     for (let i = 0; i < cpus().length; i++){
       const port = +WORKER_PORT + i;
       const worker = cluster.fork({ WORKER_PORT: port });
+      cluster.on('message', async (worker, message) => {
+					worker.send(message);
+				});
     }
   }
   if (cluster.isWorker){
     server.listen(process.env.WORKER_PORT, () => console.log(`server started ${WORKER_PORT}, Worker start ${process.pid}`))
+    process.on('message', (message: DBtype) => {
+      DB = message
+    })
   }
 }
 
